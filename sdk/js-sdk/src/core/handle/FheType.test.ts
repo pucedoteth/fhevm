@@ -632,6 +632,13 @@ describe('FheType', () => {
       expect(() => toClearValueType('euint8', 1.5)).toThrow();
     });
 
+    it('rejects values above the type max for euint8/16/32', () => {
+      expect(toClearValueType('euint8', 255)).toBe(255);
+      expect(() => toClearValueType('euint8', 256)).toThrow(InvalidTypeError);
+      expect(() => toClearValueType('euint16', 65536n)).toThrow(InvalidTypeError);
+      expect(() => toClearValueType('euint32', 2n ** 32n)).toThrow(InvalidTypeError);
+    });
+
     it('coerces number or bigint to bigint for euint64/128/256', () => {
       expect(toClearValueType('euint64', 100n)).toBe(100n);
       expect(toClearValueType('euint64', 100)).toBe(100n);
@@ -643,6 +650,13 @@ describe('FheType', () => {
       expect(() => toClearValueType('euint64', -1n)).toThrow();
       expect(() => toClearValueType('euint128', -1n)).toThrow();
       expect(() => toClearValueType('euint256', -1n)).toThrow();
+    });
+
+    it('rejects values above the type max for euint64/128/256', () => {
+      expect(toClearValueType('euint64', 2n ** 64n - 1n)).toBe(2n ** 64n - 1n);
+      expect(() => toClearValueType('euint64', 2n ** 64n)).toThrow(InvalidTypeError);
+      expect(() => toClearValueType('euint128', 2n ** 128n)).toThrow(InvalidTypeError);
+      expect(() => toClearValueType('euint256', 2n ** 256n)).toThrow(InvalidTypeError);
     });
   });
 

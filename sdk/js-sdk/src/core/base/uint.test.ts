@@ -7,10 +7,12 @@ import {
   assertIsUint8,
   assertIsUint32,
   assertIsUint64,
+  assertIsUint128,
   assertIsUint256,
   assertRecordUintProperty,
   assertRecordUint256Property,
   asUint,
+  asUint128,
   isRecordUintProperty,
   isRecordUint256Property,
   isUint,
@@ -793,6 +795,30 @@ describe('assertIsUint64', () => {
   it('throws for values larger than MAX_UINT64', () => {
     expect(() => assertIsUint64(MAX_UINT64 + 1n, {})).toThrow(InvalidTypeError); // 2^64
     expect(() => assertIsUint64(340282366920938463463374607431768211455n, {})).toThrow(InvalidTypeError); // 2^128 - 1
+  });
+});
+
+describe('assertIsUint128', () => {
+  it('does not throw for values within range', () => {
+    expect(() => assertIsUint128(0, {})).not.toThrow();
+    expect(() => assertIsUint128(MAX_UINT64, {})).not.toThrow();
+    expect(() => assertIsUint128(MAX_UINT128, {})).not.toThrow();
+  });
+
+  it('throws for values larger than MAX_UINT128', () => {
+    expect(() => assertIsUint128(MAX_UINT128 + 1n, {})).toThrow(InvalidTypeError);
+    expect(() => assertIsUint128(MAX_UINT256, {})).toThrow(InvalidTypeError);
+  });
+
+  it('throws for non-uint values', () => {
+    expect(() => assertIsUint128(-1, {})).toThrow(InvalidTypeError);
+    expect(() => assertIsUint128(1.5, {})).toThrow(InvalidTypeError);
+    expect(() => assertIsUint128('1', {})).toThrow(InvalidTypeError);
+  });
+
+  it('asUint128 rejects values larger than MAX_UINT128', () => {
+    expect(asUint128(MAX_UINT128)).toBe(MAX_UINT128);
+    expect(() => asUint128(MAX_UINT128 + 1n)).toThrow(InvalidTypeError);
   });
 });
 

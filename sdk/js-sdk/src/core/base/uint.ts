@@ -426,7 +426,7 @@ export function assertIsUint128(
   value: unknown,
   options: { subject?: string } & ErrorMetadataParams,
 ): asserts value is Uint128 {
-  if (!isUint256(value)) {
+  if (!isUint128(value)) {
     throw new InvalidTypeError(
       {
         subject: options.subject,
